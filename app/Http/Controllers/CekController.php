@@ -130,12 +130,13 @@ class CekController extends Controller
             }
         }
 
-        // Outputkan hasil rekomendasi
+        // Output hasil rekomendasi
         $data = [
             'km_terakhir' => $km_terakhir,
             'km_sekarang' => $km_sekarang,
             'jenis_motor' => $jenis_motor,
             'perbedaan_km' => $perbedaan_km,
+            'estimasi_harga' => $harga,
             'rekomendasi' => $rekomendasi,
             'keterangan' => $keterangan
         ];
