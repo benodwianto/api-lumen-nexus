@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bengkels', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('id_user');
+            $table->foreignId('id_user');
             $table->string('foto-bengkel');
             $table->integer('jam_buka');
             $table->integer('jam_tutup');

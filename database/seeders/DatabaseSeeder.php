@@ -23,49 +23,49 @@ class DatabaseSeeder extends Seeder
             'email' => 'bam@gmail.com',
             'password' => 'pass',
             'api-token' => '12345',
-            'status' => 'admin',
+            'status' => '1',
         ]);
 
-        User::create([
-            'username' => 'Nanang',
-            'email' => 'bam@gmail.com',
-            'password' => 'pass',
-            'api-token' => '12345',
-            'status' => 'user',
-        ]);
+        // User::create([
+        //     'username' => 'Nanang',
+        //     'email' => 'bam@gmail.com',
+        //     'password' => 'pass',
+        //     'api-token' => '12345',
+        //     'status' => 'user',
+        // ]);
 
         Product::create([
-            'title' => 'Cara ubah dosa jadi saldo dana',
-            'category_id' => 1,
-            'price' => 20000,
-            'stock' => 100,
-            'publisher' => 'Bambang nurjana',
+            'nama_produk' => 'Cara ubah dosa jadi saldo dana',
+            'kategori_id' => 1,
+            'harga' => 20000,
+            'tautan' => 'Bambang nurjana',
+            'deskripsi' => 'Barang yang sangat bagus untuk anda jadikan deban belinya dimanapun kapanpun dan dimanapu dan besok pagi lagi',
             'img' => 'marapi.jpg'
         ]);
         Product::create([
-            'title' => 'saldo dana',
-            'category_id' => 2,
-            'price' => 20000,
-            'stock' => 100,
-            'publisher' => 'Bambang nurjana',
-            'img' => 'marapi.jpg'
-        ]);
-
-        Product::create([
-            'title' => 'Cara ubah dosa ',
-            'category_id' => 1,
-            'price' => 20000,
-            'stock' => 100,
-            'publisher' => 'Bambang nurjana',
+            'nama_produk' => 'saldo dana',
+            'kategori_id' => 2,
+            'harga' => 20000,
+            'tautan' => 'Bambang nurjana',
+            'deskripsi' => 'Barang yang sangat bagus untuk anda jadikan deban belinya dimanapun kapanpun dan dimanapu dan besok pagi lagi',
             'img' => 'marapi.jpg'
         ]);
 
         Product::create([
-            'title' => ' jadi saldo dana',
-            'category_id' => 1,
-            'price' => 20000,
-            'stock' => 100,
-            'publisher' => 'Bambang nurjana',
+            'nama_produk' => 'Cara ubah dosa ',
+            'kategori_id' => 1,
+            'harga' => 20000,
+            'tautan' => 'Bambang nurjana',
+            'deskripsi' => 'Barang yang sangat bagus untuk anda jadikan deban belinya dimanapun kapanpun dan dimanapu dan besok pagi lagi',
+            'img' => 'marapi.jpg'
+        ]);
+
+        Product::create([
+            'nama_produk' => ' jadi saldo dana',
+            'kategori_id' => 1,
+            'harga' => 20000,
+            'tautan' => 'Bambang nurjana',
+            'deskripsi' => 'Barang yang sangat bagus untuk anda jadikan deban belinya dimanapun kapanpun dan dimanapu dan besok pagi lagi',
             'img' => 'marapi.jpg'
         ]);
     }

@@ -17,21 +17,21 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-// $router->get('/login', 'LoginController@login');
 $router->get('/register', 'LoginController@index');
 
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('home', ['uses' => 'HomeController@index']);
     $router->get('user', ['uses' => 'HomeController@index']);
 });
-$router->post('product', ['uses' => 'ProductController@store']);
 
-$router->post('shop/login', ['uses' => 'LoginController@login']);
-$router->post('shop/register', ['uses' => 'LoginController@store']);
+$router->post('login', ['uses' => 'LoginController@login']);
+$router->post('register', ['uses' => 'LoginController@store']);
 
 $router->group(['prefix' => 'shop'], function () use ($router) {
     $router->post('cek', ['uses' => 'CekController@store']);
 
+    $router->post('product', ['uses' => 'ProductController@store']);
+    $router->get('product/{id}', ['uses' => 'ProductController@show']);
     $router->get('product', ['uses' => 'ProductController@index']);
     $router->delete('product/{id}', ['uses' => 'ProductController@destroy']);
     $router->put('product/{id}', ['uses' => 'ProductController@update']);

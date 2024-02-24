@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('username');
             $table->string('email');
             $table->string('password');
-            $table->enum('status', ['admin', 'user']);
-            $table->string('nama')->nullable();
-            $table->date('tgl_lahir');
-            $table->string('foto_profil');
-            $table->integer('no_hp');
+            $table->boolean('status')->default(false);
+            $table->string('username');
+            $table->string('nama_lengkap')->nullable();
+            $table->date('tgl_lahir')->nullable();
+            $table->string('foto_profil')->nullable();
+            $table->integer('no_hp')->nullable();
             $table->string('api-token');
             $table->timestamps();
         });

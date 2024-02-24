@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('category');
-            $table->foreignId('product_id')->default('1');
+            $table->enum('nama_kategori', ['Oli Mesin', 'Oli Gardan', 'Busi', 'Kampas Rem', 'Filter Udara', 'lainnya']);
+            $table->foreignId('id_product')->default('1');
             $table->string('img');
             $table->timestamps();
         });

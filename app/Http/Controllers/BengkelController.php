@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
-use App\Models\product;
-use App\Models\User;
+use App\sfc;
 use Illuminate\Http\Request;
 
-class CartController extends Controller
+class BengkelController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +14,7 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cart_data = Cart::all();
-
-        return response()->json($data_cart);
+        //
     }
 
     /**
@@ -39,27 +35,16 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'user_id' => 'required',
-            'product_id' => 'required',
-        ]);
-
-        $data = [
-            'user_id' => $request->input('user_id'),
-            'product_id' => $request->input('product_id'),
-        ];
-
-        Cart::create($data);
-        return response()->json($data);
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Cart  $cart
+     * @param  \App\sfc  $sfc
      * @return \Illuminate\Http\Response
      */
-    public function show(Cart $cart)
+    public function show(sfc $sfc)
     {
         //
     }
@@ -67,10 +52,10 @@ class CartController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Cart  $cart
+     * @param  \App\sfc  $sfc
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cart $cart)
+    public function edit(sfc $sfc)
     {
         //
     }
@@ -79,10 +64,10 @@ class CartController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cart  $cart
+     * @param  \App\sfc  $sfc
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cart $cart)
+    public function update(Request $request, sfc $sfc)
     {
         //
     }
@@ -90,10 +75,10 @@ class CartController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Cart  $cart
+     * @param  \App\sfc  $sfc
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cart $cart)
+    public function destroy(sfc $sfc)
     {
         //
     }

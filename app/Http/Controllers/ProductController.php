@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -14,7 +15,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data =  Product::all();
+        $user = Auth::user();
+        $data = product::where('user_id', $user->id)->get();
         return response()->json($data);
     }
 
@@ -39,7 +41,7 @@ class ProductController extends Controller
         $this->validate($request, [
             'nama_produk' => 'required|unique:products',
             'harga' => 'required|numeric',
-            'stok' => 'required|numeric',
+            'tautan' => 'required',
             'img' => 'required',
             'kategori_id' => 'required',
             'deskripsi' => 'required|min:30',
@@ -52,7 +54,7 @@ class ProductController extends Controller
             'nama_produk' => $request->input('nama_produk'),
             'kategori_id' => $request->input('kategori_id'),
             'harga' => $request->input('harga'),
-            'stok' => $request->input('stok'),
+            'tautan' => $request->input('tautan'),
             'img' => url('img', $img),
             'deskripsi' => $request->input('deskripsi'),
         ];
@@ -67,9 +69,11 @@ class ProductController extends Controller
      * @param  \App\Models\product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(product $product)
+    public function show(product $product, $id)
     {
-        //
+        $product = product::findorFail($id);
+
+        return response()->json($product);
     }
 
     /**
