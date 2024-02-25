@@ -71,7 +71,20 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $update_user = User::where('id', $id)->update($request->all());
+        if ($update_user) {
+            $hasil = [
+                'status' => '200',
+                'pesan' => 'Data anda berhasi di perbarui',
+            ];
+        } else {
+            $hasil = [
+                'status' => '400',
+                'pesan' => 'Data anda Gagal di perbarui',
+            ];
+        }
+
+        return response()->json($hasil);
     }
 
     /**

@@ -28,6 +28,8 @@ $router->post('login', ['uses' => 'LoginController@login']);
 $router->post('register', ['uses' => 'LoginController@store']);
 
 $router->group(['prefix' => 'shop'], function () use ($router) {
+    $router->put('user/{id}', ['uses' => 'UserController@update']);
+
     $router->post('cek', ['uses' => 'CekController@store']);
 
     $router->post('product', ['uses' => 'ProductController@store']);

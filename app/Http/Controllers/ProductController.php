@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -59,8 +60,23 @@ class ProductController extends Controller
             'deskripsi' => $request->input('deskripsi'),
         ];
 
-        Product::create($data);
-        return response()->json($data);
+        $tambah_data = Product::create($data);
+
+        if ($tambah_data) {
+            $hasil = [
+                'status' => '200',
+                'pesan' => 'Data berhasi di ditambahkan',
+                'data' => $data
+            ];
+        } else {
+            $hasil = [
+                'status' => '400',
+                'pesan' => 'Data Gagal di ditambahkan',
+                'data' => $data
+            ];
+        }
+
+        return response()->json($hasil);
     }
 
     /**
@@ -96,9 +112,21 @@ class ProductController extends Controller
      */
     public function update(Request $request, product $product, $id)
     {
-        Product::where('id', $id)->update($request->all());
+        $update_data = Product::where('id', $id)->update($request->all());
 
-        return response()->json('Data Berhasil diupdate');
+        if ($update_data) {
+            $hasil = [
+                'status' => '200',
+                'pesan' => 'Data berhasi di perbarui',
+            ];
+        } else {
+            $hasil = [
+                'status' => '400',
+                'pesan' => 'Data Gagal di perbarui',
+            ];
+        }
+
+        return response()->json($hasil);
     }
 
     /**
@@ -109,8 +137,23 @@ class ProductController extends Controller
      */
     public function destroy(product $product, $id)
     {
-        Product::where('id', $id)->delete();
+        $produk = product::findorFail($id);
+        if ($produk->img) {
+            Storage::delete($produk->img);
+        }
+        $hapus_produk = Product::where('id', $id)->delete();
+        if ($hapus_produk) {
+            $hasil = [
+                'status' => '200',
+                'pesan' => 'Data berhasi di dihapus',
+            ];
+        } else {
+            $hasil = [
+                'status' => '400',
+                'pesan' => 'Data Gagal di dihapus',
+            ];
+        }
 
-        return response()->json('Data Berhasil dihapus');
+        return response()->json($hasil);
     }
 }

@@ -66,8 +66,8 @@ class LoginController extends Controller
     {
         $this->validate($request, [
             'username' => 'required|unique:users',
-            'email' => 'required',
-            'password' => 'required',
+            'email' => 'required|unique:users',
+            'password' => 'required|min:8',
         ]);
 
         $data = [
