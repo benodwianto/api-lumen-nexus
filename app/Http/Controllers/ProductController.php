@@ -43,7 +43,7 @@ class ProductController extends Controller
             'nama_produk' => 'required|unique:products',
             'harga' => 'required|numeric',
             'tautan' => 'required',
-            'img' => 'required',
+            'img' => 'required|mimes:jpeg,png,jpg|max:2048',
             'kategori_id' => 'required',
             'deskripsi' => 'required|min:30',
         ]);

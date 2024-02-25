@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\sfc;
+use App\Models\Bengkel;
 use Illuminate\Http\Request;
 
 class BengkelController extends Controller
@@ -35,16 +35,28 @@ class BengkelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'foto_bengkel' => 'required|mimes:jpeg,png,jpg|max:2048',
+            'jam_buka' => 'nullable|date_format:H:i',
+            'jam_tutup' => 'nullable|date_format:H:i',
+            'foto_galeri-1' => 'mimes:jpeg,png,jpg|max:2048',
+            'foto_galeri-2' => 'mimes:jpeg,png,jpg|max:2048',
+            'foto_galeri-3' => 'mimes:jpeg,png,jpg|max:2048',
+            'foto_galeri-4' => 'mimes:jpeg,png,jpg|max:2048',
+            'foto_galeri-5' => 'mimes:jpeg,png,jpg|max:2048',
+            'foto_galeri-6' => 'mimes:jpeg,png,jpg|max:2048',
+            'deskripsi' => 'min:30',
+            'lokasi' => 'required'
+        ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\sfc  $sfc
+     * @param  \App\Models\Bengkel  $bengkel
      * @return \Illuminate\Http\Response
      */
-    public function show(sfc $sfc)
+    public function show(Bengkel $bengkel)
     {
         //
     }
@@ -52,10 +64,10 @@ class BengkelController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\sfc  $sfc
+     * @param  \App\Models\Bengkel  $bengkel
      * @return \Illuminate\Http\Response
      */
-    public function edit(sfc $sfc)
+    public function edit(Bengkel $bengkel)
     {
         //
     }
@@ -64,10 +76,10 @@ class BengkelController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\sfc  $sfc
+     * @param  \App\Models\Bengkel  $bengkel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, sfc $sfc)
+    public function update(Request $request, Bengkel $bengkel)
     {
         //
     }
@@ -75,10 +87,10 @@ class BengkelController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\sfc  $sfc
+     * @param  \App\Models\Bengkel  $bengkel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(sfc $sfc)
+    public function destroy(Bengkel $bengkel)
     {
         //
     }

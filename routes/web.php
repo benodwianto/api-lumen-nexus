@@ -27,8 +27,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 $router->post('login', ['uses' => 'LoginController@login']);
 $router->post('register', ['uses' => 'LoginController@store']);
 
-$router->group(['prefix' => 'shop'], function () use ($router) {
+$router->group(['prefix' => 'home'], function () use ($router) {
     $router->put('user/{id}', ['uses' => 'UserController@update']);
+    $router->delete('user/{id}', ['uses' => 'UserController@destroy']);
 
     $router->post('cek', ['uses' => 'CekController@store']);
 

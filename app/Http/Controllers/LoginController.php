@@ -67,14 +67,15 @@ class LoginController extends Controller
         $this->validate($request, [
             'username' => 'required|unique:users',
             'email' => 'required|unique:users',
-            'password' => 'required|min:8',
+            'password' => 'required|min:6',
+            ''
         ]);
 
         $data = [
             'username' => $request->input('username'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
-            'status' => 'user',
+            'status' => '0',
             'api-token' => '12345',
         ];
 
@@ -123,8 +124,26 @@ class LoginController extends Controller
      * @param  \App\Models\login  $login
      * @return \Illuminate\Http\Response
      */
-    public function destroy(login $login)
+    public function destroy(login $login,$id)
     {
-        //
+        $user = User::findorFail($id);
+        if ($user->img) {
+            Storage::delete($user->foto_profil);
+        }
+        $hapus_user = User::where('id', $id)->delete();
+        if ($hapus_user) {
+            $hasil = [
+                'status' => '200',
+                'pesan' => 'Data berhasi di dihapus',
+            ];
+        } else {
+            $hasil = [
+                'status' => '400',
+                'pesan' => 'Data Gagal di dihapus',
+            ];
+        }
+
+        return response()->json($hasil);
+    }
     }
 }

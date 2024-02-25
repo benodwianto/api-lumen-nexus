@@ -71,7 +71,15 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $update_user = User::where('id', $id)->update($request->all());
+        $this->validate($request, [
+            'no_hp' => ['required', 'numeric', 'regex:/^08\d{9,10}$/'],
+            'nama_lengkap' => 'required|unique:users',
+            'tgl_lahir' => 'date',
+            'email' => 'unique:users',
+            'foto_profil' => 'mimes:jpeg,png,jpg|max:2048'
+
+        ]);
+        $update_user = User::where('id', $id)->update($request->only('no_hp', 'nama_lengkap', 'tgl_lahir', 'email', 'foto_profil'));
         if ($update_user) {
             $hasil = [
                 'status' => '200',
