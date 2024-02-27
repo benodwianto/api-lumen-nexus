@@ -38,6 +38,8 @@ $app->withEloquent();
 |
 */
 
+$app->register(Illuminate\Hashing\HashServiceProvider::class);
+
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
@@ -81,6 +83,7 @@ $app->configure('app');
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'user' => App\Http\Middleware\UserMiddleware::class,
+    'admin' => App\Http\Middleware\AdminMiddleware::class,
 ]);
 
 /*

@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\login;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\login;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class LoginController extends Controller
 {
+
     public function login(Request $request)
     {
         $this->validate($request, [
-            'email' => 'required',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
@@ -21,29 +24,39 @@ class LoginController extends Controller
 
         $user = User::where('email', $email)->first();
 
-        if ($user->password === $password) {
-            $token = Str::random(20);
-
-            $user->update([
-                'api-token' => $token,
-            ]);
-
+        if (!$user) {
             return response()->json([
-                'message' => 'login sukses',
-                'token' => $token,
-                'data' => $user,
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'Username atau password salah',
-                'data' => ''
-            ]);
+                'message' => 'Email tidak ditemukan',
+                'data' => null
+            ], 404);
         }
+
+        if (!Hash::check($password, $user->password)) {
+            return response()->json([
+                'message' => 'Password salah',
+                'data' => null
+            ], 401);
+        }
+
+        $token = Str::random(60);
+
+        $user->update([
+            'api-token' => $token,
+        ]);
+
+        return response()->json([
+            'message' => 'Login sukses',
+            'token' => $token,
+            'data' => $user,
+        ]);
     }
+
 
     public function index()
     {
-        echo "ini Index";
+        return response()->json([
+            'pesan' => 'Login terlebih dahulu'
+        ]);
     }
 
     /**
@@ -66,9 +79,8 @@ class LoginController extends Controller
     {
         $this->validate($request, [
             'username' => 'required|unique:users',
-            'email' => 'required|unique:users',
+            'email' => 'required|unique:users|email',
             'password' => 'required|min:6',
-            ''
         ]);
 
         $data = [
@@ -76,13 +88,17 @@ class LoginController extends Controller
             'email' => $request->input('email'),
             'password' => $request->input('password'),
             'status' => '0',
-            'api-token' => '12345',
+            'api-token' => '1234',
         ];
 
-        User::create($data);
+        // Enkripsi password menggunakan Hash::make()
+        $data['password'] = Hash::make($data['password']);
 
-        return response()->json($data);
+        $user = User::create($data);
+
+        return response()->json($user);
     }
+
 
     /**
      * Display the specified resource.
@@ -124,7 +140,7 @@ class LoginController extends Controller
      * @param  \App\Models\login  $login
      * @return \Illuminate\Http\Response
      */
-    public function destroy(login $login,$id)
+    public function destroy(login $login, $id)
     {
         $user = User::findorFail($id);
         if ($user->img) {
@@ -144,6 +160,5 @@ class LoginController extends Controller
         }
 
         return response()->json($hasil);
-    }
     }
 }

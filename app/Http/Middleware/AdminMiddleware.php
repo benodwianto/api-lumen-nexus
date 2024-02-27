@@ -2,11 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
-
 use Closure;
 
-class UserMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,11 +14,16 @@ class UserMiddleware
      * @return mixed
      */
     public function handle($request, Closure $next)
-    { {
-            if ($request->user()->status <> '1') {
-                return redirect('login');
-            }
-            return $next($request);
+    {
+        if ($request->user <> 'admin') {
+            return redirect('login');
         }
+        return $next($request);
+
+        // $response = $next($request);
+
+        // // Post-Middleware Action
+
+        // return $response;
     }
 }

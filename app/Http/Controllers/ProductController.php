@@ -44,9 +44,10 @@ class ProductController extends Controller
             'harga' => 'required|numeric',
             'tautan' => 'required',
             'img' => 'required|mimes:jpeg,png,jpg|max:2048',
-            'kategori_id' => 'required',
+            'kategori_id' => 'required|numeric',
             'deskripsi' => 'required|min:30',
         ]);
+
 
         $img = $request->file('img')->getClientOriginalName('img');
         $request->file('img')->move('img', $img);
@@ -58,6 +59,7 @@ class ProductController extends Controller
             'tautan' => $request->input('tautan'),
             'img' => url('img', $img),
             'deskripsi' => $request->input('deskripsi'),
+            'user_id' => Auth::id()
         ];
 
         $tambah_data = Product::create($data);

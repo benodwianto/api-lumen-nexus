@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bengkel;
+use App\Models\product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BengkelController extends Controller
 {
@@ -14,7 +16,11 @@ class BengkelController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+
+        $data_produk = product::Where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->get();
+
+        return response()->json($data_produk);
     }
 
     /**
@@ -36,18 +42,35 @@ class BengkelController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'foto_bengkel' => 'required|mimes:jpeg,png,jpg|max:2048',
-            'jam_buka' => 'nullable|date_format:H:i',
-            'jam_tutup' => 'nullable|date_format:H:i',
-            'foto_galeri-1' => 'mimes:jpeg,png,jpg|max:2048',
-            'foto_galeri-2' => 'mimes:jpeg,png,jpg|max:2048',
-            'foto_galeri-3' => 'mimes:jpeg,png,jpg|max:2048',
-            'foto_galeri-4' => 'mimes:jpeg,png,jpg|max:2048',
-            'foto_galeri-5' => 'mimes:jpeg,png,jpg|max:2048',
-            'foto_galeri-6' => 'mimes:jpeg,png,jpg|max:2048',
-            'deskripsi' => 'min:30',
-            'lokasi' => 'required'
+            'nama_bengkel' => 'required|unique:bengkels,nama_bengkel',
+            'alamat' => 'required',
+            'nohp' => ['required', 'numeric', 'regex:/^08\d{9,10}$/'],
         ]);
+
+        $data = [
+            'nama_bengkel' => $request->input('nama_bengkel'),
+            'alamat' => $request->input('alamat'),
+            'nohp' => $request->input('nohp'),
+        ];
+
+        // $data['kategori_id'] =
+
+        $data_bengkel = Bengkel::create($data);
+        if ($data_bengkel) {
+            $hasil = [
+                'status' => '200',
+                'pesan' => 'Berhasil Mendaftar mitra',
+                'data_bengkel' => $data_bengkel
+            ];
+        } else {
+            $hasil = [
+                'status' => '400',
+                'pesan' => 'Gagal Mendaftar mitra',
+                'data_bengkel' => $data_bengkel
+            ];
+        }
+
+        return response()->json($hasil);
     }
 
     /**

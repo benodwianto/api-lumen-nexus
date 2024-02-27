@@ -24,20 +24,25 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('user', ['uses' => 'HomeController@index']);
 });
 
+$router->get('login', ['uses' => 'LoginController@index']);
 $router->post('login', ['uses' => 'LoginController@login']);
 $router->post('register', ['uses' => 'LoginController@store']);
 
-$router->group(['prefix' => 'home'], function () use ($router) {
+$router->group(['prefix' => 'nexus', 'middleware' => 'auth'], function () use ($router) {
+    //user
     $router->put('user/{id}', ['uses' => 'UserController@update']);
     $router->delete('user/{id}', ['uses' => 'UserController@destroy']);
 
+    //mitra bengkel
+    $router->post('bengkel', ['uses' => 'BengkelController@store']);
+
     $router->post('cek', ['uses' => 'CekController@store']);
 
-    $router->post('product', ['uses' => 'ProductController@store']);
-    $router->get('product/{id}', ['uses' => 'ProductController@show']);
-    $router->get('product', ['uses' => 'ProductController@index']);
-    $router->delete('product/{id}', ['uses' => 'ProductController@destroy']);
-    $router->put('product/{id}', ['uses' => 'ProductController@update']);
+    $router->post('produk', ['uses' => 'ProductController@store']);
+    $router->get('produk/{id}', ['uses' => 'ProductController@show']);
+    $router->get('produk', ['uses' => 'ProductController@index']);
+    $router->delete('produk/{id}', ['uses' => 'ProductController@destroy']);
+    $router->put('produk/{id}', ['uses' => 'ProductController@update']);
 
     $router->get('category', ['uses' => 'CategoryController@index']);
     $router->post('category', ['uses' => 'CategoryController@store']);

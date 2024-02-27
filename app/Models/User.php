@@ -18,10 +18,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var string[]
      */
-    protected $fillable = [
-        'username', 'name', 'email', 'password', 'api-token', 'level',
-    ];
+    protected $guarded = ['id'];
 
+    public function alamat()
+    {
+        return $this->hasMany(Alamat::class);
+    }
+
+    public function product()
+    {
+        return $this->hasMany(product::class);
+    }
     /**
      * The attributes excluded from the model's JSON form.
      *

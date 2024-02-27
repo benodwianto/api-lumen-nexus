@@ -17,9 +17,4 @@ class product extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function keranjang()
-    {
-        return $this->belongsToMany(User::class);
-    }
 }
