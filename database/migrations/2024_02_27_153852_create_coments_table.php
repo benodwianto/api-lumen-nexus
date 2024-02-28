@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('coments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kategori_id');
             $table->foreignId('user_id');
-            $table->float('rating')->default(0);
-            $table->integer('review_count')->default(0);
-            $table->string('nama_produk');
-            $table->integer('harga');
-            $table->string('tautan');
-            $table->string('img');
-            $table->text('deskripsi');
+            $table->foreignId('product_id');
+            $table->text('komentar');
             $table->timestamps();
+
+            // Define foreign key constraints
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
 
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('coments');
     }
 };

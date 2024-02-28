@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\login;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -41,7 +42,7 @@ class LoginController extends Controller
         $token = Str::random(60);
 
         $user->update([
-            'api-token' => $token,
+            'api_token' => $token,
         ]);
 
         return response()->json([
@@ -51,6 +52,25 @@ class LoginController extends Controller
         ]);
     }
 
+    public function logout(Request $request)
+    {
+        // Periksa apakah pengguna telah terautentikasi
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            // Hapus token autentikasi dari user yang sedang login
+            $user->api_token = null;
+            $user->save();
+
+            return response()->json([
+                'message' => 'Logout berhasil'
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Tidak ada pengguna yang terautentikasi'
+            ], 401); // Unauthorized
+        }
+    }
 
     public function index()
     {

@@ -29,6 +29,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasMany(product::class);
     }
+
+    public function comment()
+    {
+        $this->hasMany(Coment::class);
+    }
     /**
      * The attributes excluded from the model's JSON form.
      *

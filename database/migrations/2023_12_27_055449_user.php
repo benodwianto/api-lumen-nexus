@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('tgl_lahir')->nullable();
             $table->string('foto_profil')->nullable();
             $table->integer('no_hp')->nullable();
-            $table->string('api-token');
+            $table->string('api_token')->nullable();
             $table->timestamps();
         });
     }

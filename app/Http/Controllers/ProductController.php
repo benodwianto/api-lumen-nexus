@@ -6,6 +6,7 @@ use App\Models\product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -43,7 +44,7 @@ class ProductController extends Controller
             'nama_produk' => 'required|unique:products',
             'harga' => 'required|numeric',
             'tautan' => 'required',
-            'img' => 'required|mimes:jpeg,png,jpg|max:2048',
+            'img' => 'required|mimes:jpeg,png,jpg|max:1000',
             'kategori_id' => 'required|numeric',
             'deskripsi' => 'required|min:30',
         ]);
@@ -79,6 +80,24 @@ class ProductController extends Controller
         }
 
         return response()->json($hasil);
+    }
+
+    public function rateProduct(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'rating' => 'required|numeric|min:1|max:5',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $product = Product::findOrFail($id);
+        $product->rating = ($product->rating * $product->review_count + $request->rating) / ($product->review_count + 1);
+        $product->review_count++;
+        $product->save();
+
+        return response()->json(['message' => 'Rating berhasil ditambahkan']);
     }
 
     /**
@@ -139,20 +158,26 @@ class ProductController extends Controller
      */
     public function destroy(product $product, $id)
     {
-        $produk = product::findorFail($id);
-        if ($produk->img) {
-            Storage::delete($produk->img);
+        $produk = product::findOrFail($id);
+
+        // Hapus file gambar jika ada
+        $filename = 'img/' . $produk->img;
+        if (file_exists($filename)) {
+            unlink($filename); // Hapus file dari penyimpanan
         }
-        $hapus_produk = Product::where('id', $id)->delete();
+
+        // Hapus produk dari database
+        $hapus_produk = product::destroy($id);
+
         if ($hapus_produk) {
             $hasil = [
                 'status' => '200',
-                'pesan' => 'Data berhasi di dihapus',
+                'pesan' => 'Data berhasil dihapus',
             ];
         } else {
             $hasil = [
                 'status' => '400',
-                'pesan' => 'Data Gagal di dihapus',
+                'pesan' => 'Data gagal dihapus',
             ];
         }
 

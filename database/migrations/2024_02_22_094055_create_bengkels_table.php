@@ -15,18 +15,18 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('nama_bengkel');
             $table->foreignId('id_user');
-            $table->string('foto-bengkel');
-            $table->integer('jam_buka');
-            $table->integer('jam_tutup');
+            $table->string('foto-bengkel')->nullable();
+            $table->integer('jam_buka')->nullable();
+            $table->integer('jam_tutup')->nullable();
             $table->integer('nohp');
             $table->string('alamat');
-            $table->text('deskripsi');
-            $table->string('foto-galeri-1');
-            $table->string('foto-galeri-2');
-            $table->string('foto-galeri-3');
-            $table->string('foto-galeri-4');
-            $table->string('foto-galeri-5');
-            $table->string('foto-galeri-6');
+            $table->text('deskripsi')->nullable();
+            $table->string('foto-galeri-1')->nullable();
+            $table->string('foto-galeri-2')->nullable();
+            $table->string('foto-galeri-3')->nullable();
+            $table->string('foto-galeri-4')->nullable();
+            $table->string('foto-galeri-5')->nullable();
+            $table->string('foto-galeri-6')->nullable();
             $table->timestamps();
         });
     }

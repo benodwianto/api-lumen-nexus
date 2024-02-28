@@ -3,9 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Bengkel;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
+use Database\Seeders\UserSeeder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -20,12 +23,23 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UserSeeder::class);
 
+        Bengkel::create([
+            'nama_bengkel' => 'Bambang Bengkel',
+            'id_user' => 1,
+            'jam_buka' => '09.00',
+            'jam_tutup' => '18.00',
+            'nohp' => '081234567',
+            'alamat' => 'gurun laweh lubeg',
+            'foto-bengkel' => 'bengkel.jpg',
+            'deskripsi' => 'bengkel mantap dan sangat mudah dan murah banged dan sangat menyenangkan unutk di lakukan saat anda adalah manusia',
+        ]);
+
         User::create([
             'username' => 'Bambang',
             'email' => 'bam@gmail.com',
             'password' => Hash::make('password'),
-            'api-token' => '12345',
-            'status' => '1',
+            'api_token' => '12345',
+            'status' => '0',
         ]);
 
         Category::create([

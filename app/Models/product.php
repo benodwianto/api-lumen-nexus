@@ -17,4 +17,9 @@ class product extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function coment()
+    {
+        $this->hasMany(Coment::class);
+    }
 }

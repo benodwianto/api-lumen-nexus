@@ -6,6 +6,7 @@ use App\Models\Bengkel;
 use App\Models\product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class BengkelController extends Controller
 {
@@ -18,7 +19,7 @@ class BengkelController extends Controller
     {
         $user = Auth::user();
 
-        $data_produk = product::Where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->get();
+        $data_produk = product::Where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
 
         return response()->json($data_produk);
     }
@@ -44,23 +45,26 @@ class BengkelController extends Controller
         $this->validate($request, [
             'nama_bengkel' => 'required|unique:bengkels,nama_bengkel',
             'alamat' => 'required',
-            'nohp' => ['required', 'numeric', 'regex:/^08\d{9,10}$/'],
+            'nohp' => 'numeric'
         ]);
 
         $data = [
             'nama_bengkel' => $request->input('nama_bengkel'),
             'alamat' => $request->input('alamat'),
             'nohp' => $request->input('nohp'),
+            'id_user' => Auth::id(),
         ];
-
-        // $data['kategori_id'] =
 
         $data_bengkel = Bengkel::create($data);
         if ($data_bengkel) {
+            $user = Auth::user();
+            $user->status = 1;
+            $user->save();
+
             $hasil = [
                 'status' => '200',
                 'pesan' => 'Berhasil Mendaftar mitra',
-                'data_bengkel' => $data_bengkel
+                'data_bengkel' => $data_bengkel,
             ];
         } else {
             $hasil = [
@@ -102,9 +106,22 @@ class BengkelController extends Controller
      * @param  \App\Models\Bengkel  $bengkel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Bengkel $bengkel)
+    public function update(Request $request, $id)
     {
-        //
+        $update_data = Product::where('id', $id)->update($request->all());
+
+        if ($update_data) {
+            $hasil = [
+                'status' => '200',
+                'pesan' => 'Data berhasi di perbarui',
+            ];
+        } else {
+            $hasil = [
+                'pesan' => 'Data Gagal di perbarui', 400
+            ];
+        }
+
+        return response()->json($hasil);
     }
 
     /**
@@ -113,8 +130,34 @@ class BengkelController extends Controller
      * @param  \App\Models\Bengkel  $bengkel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Bengkel $bengkel)
+    public function destroy(Bengkel $bengkel, $id)
     {
-        //
+        $produk = Bengkel::findOrFail($id);
+
+        $fields = ['foto_bengkel', 'foto-galeri-1', 'foto-galeri-2', 'foto-galeri-3', 'foto-galeri-4', 'foto-galeri-5', 'foto-galeri-6']; // Ganti dengan nama field sesuai dengan struktur tabel Anda
+
+        // Hapus file gambar dari setiap field
+        foreach ($fields as $field) {
+            $filename = 'img/' . $produk->$field;
+            if ($produk->$field && file_exists($filename)) {
+                unlink($filename); // Hapus file dari penyimpanan
+            }
+        }
+        // Hapus produk dari database
+        $hapus_produk = product::destroy($id);
+
+        if ($hapus_produk) {
+            $hasil = [
+                'status' => '200',
+                'pesan' => 'Data berhasil dihapus',
+            ];
+        } else {
+            $hasil = [
+                'status' => '400',
+                'pesan' => 'Data gagal dihapus',
+            ];
+        }
+
+        return response()->json($hasil);
     }
 }
