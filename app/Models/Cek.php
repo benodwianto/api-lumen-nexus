@@ -11,4 +11,9 @@ class Cek extends Model
     public function user()
     {
     }
+
+    public function bengkel()
+    {
+        return  $this->hasMany(Bengkel::class);
+    }
 }

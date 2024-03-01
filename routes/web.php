@@ -13,16 +13,12 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+// $router->get('/', function () use ($router) {
+//     return $router->app->version();
+// });
 
-$router->get('/register', 'LoginController@index');
-
-$router->group(['prefix' => 'api'], function () use ($router) {
-    $router->get('home', ['uses' => 'HomeController@index']);
-    $router->get('user', ['uses' => 'HomeController@index']);
-});
+$router->get('home', ['uses' => 'HomeController@index']);
+$router->get('user', ['uses' => 'HomeController@index']);
 
 //login dan register
 $router->get('login', ['uses' => 'LoginController@index']);
@@ -30,35 +26,49 @@ $router->post('login', ['uses' => 'LoginController@login']);
 $router->post('register', ['uses' => 'LoginController@store']);
 $router->post('logout', ['uses' => 'LoginController@logout']);
 
+
 $router->group(['prefix' => 'nexus', 'middleware' => 'auth'], function () use ($router) {
     //user
     $router->put('user/{id}', ['uses' => 'UserController@update']);
     $router->delete('user/{id}', ['uses' => 'UserController@destroy']);
+    $router->get('user', ['uses' => 'UserController@index']);
 
-    //mitra bengkel
-    $router->get('bengkel', ['uses' => 'BengkelController@index']);
-    $router->post('bengkel', ['uses' => 'BengkelController@store']);
-    $router->put('bengkel/{id}', ['uses' => 'BengkelController@update']);
+    //searching
+    $router->post('search', ['uses' => 'HomeController@search']);
+
+    //daftar bengkel
+    $router->post('daftarbengkel', ['uses' => 'BengkelController@store']);
+    $router->group(['middleware' => 'admin'], function () use ($router) {
+        //mitra bengkel
+        $router->get('bengkel', ['uses' => 'BengkelController@index']);
+        $router->put('bengkel/{id}', ['uses' => 'BengkelController@update']);
+        $router->get('bengkel/{bengkel}', ['uses' => 'BengkelController@show']);
+        $router->post('bengkel/{id}/rating', ['uses' => 'BengkelController@rateBengkel']);
+
+        //produk
+        $router->post('produk', ['uses' => 'ProductController@store']);
+        $router->get('produk/{id}', ['uses' => 'ProductController@show']);
+        $router->get('produk', ['uses' => 'ProductController@index']);
+        $router->delete('produk/{id}', ['uses' => 'ProductController@destroy']);
+        $router->put('produk/{id}', ['uses' => 'ProductController@update']);
+    });
 
     //cek motor
     $router->post('cek', ['uses' => 'CekController@store']);
-
-    //produk
-    $router->post('produk', ['uses' => 'ProductController@store']);
-    $router->get('produk/{id}', ['uses' => 'ProductController@show']);
-    $router->get('produk', ['uses' => 'ProductController@index']);
-    $router->delete('produk/{id}', ['uses' => 'ProductController@destroy']);
-    $router->put('produk/{id}', ['uses' => 'ProductController@update']);
-    $router->put('produk/{id}/rating', ['uses' => 'ProductController@rateProduct']);
+    $router->delete('cek/{id}', ['uses' => 'CekController@destroy']);
+    $router->put('cek/{id}', ['uses' => 'CekController@update']);
+    $router->get('cek/{id}', ['uses' => 'CekController@show']);
+    $router->get('cek', ['uses' => 'CekController@index']);
 
     //komentar
-    $router->post('produk/{productId}/komen', ['uses' => 'ComentController@store']);
-    $router->put('produk/{id}/komen', ['uses' => 'ComentController@update']);
-    $router->delete('produk/{id}/komen', ['uses' => 'ComentController@destroy']);
+    $router->get('komentar/bengkel', ['uses' => 'ComentController@index']);
+    $router->post('bengkel/{id}/komen', ['uses' => 'ComentController@store']);
+    $router->put('bengkel/{id}/komen', ['uses' => 'ComentController@update']);
+    $router->delete('bengkel/{id}/komen', ['uses' => 'ComentController@destroy']);
 
     //kategori
-    $router->get('category', ['uses' => 'CategoryController@index']);
-    $router->post('category', ['uses' => 'CategoryController@store']);
-    $router->put('category/{id}', ['uses' => 'CategoryController@update']);
-    $router->delete('category/{id}', ['uses' => 'CategoryController@destroy']);
+    $router->get('kategori', ['uses' => 'CategoryController@index']);
+    $router->post('kategori', ['uses' => 'CategoryController@store']);
+    $router->put('kategori/{id}', ['uses' => 'CategoryController@update']);
+    $router->delete('kategori/{id}', ['uses' => 'CategoryController@destroy']);
 });

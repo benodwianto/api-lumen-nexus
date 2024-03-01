@@ -15,15 +15,10 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user <> 'admin') {
-            return redirect('login');
+        if ($request->user()->status !== '1') {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
+
         return $next($request);
-
-        // $response = $next($request);
-
-        // // Post-Middleware Action
-
-        // return $response;
     }
 }

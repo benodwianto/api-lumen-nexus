@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coment;
 use App\Models\Bengkel;
 use App\Models\product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class BengkelController extends Controller
 {
@@ -19,11 +21,38 @@ class BengkelController extends Controller
     {
         $user = Auth::user();
 
+        $data_komentar = Coment::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        $bengkel = $user->bengkel::all();
         $data_produk = product::Where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
 
-        return response()->json($data_produk);
+        return response()->json([
+            'data_produk' => $data_produk,
+            'data_bengkel' => $bengkel,
+            'data_komentar' => $data_komentar
+        ]);
     }
 
+
+    public function rateBengkel(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'rating' => 'required|numeric|min:1|max:5',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $bengkel = Bengkel::findOrFail($id);
+        $bengkel->rating = ($bengkel->rating * $bengkel->review_count + $request->rating) / ($bengkel->review_count + 1);
+        $bengkel->review_count++;
+        $bengkel->save();
+
+        return response()->json([
+            'message' => 'Rating berhasil ditambahkan',
+            'data' => $bengkel
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -85,7 +114,9 @@ class BengkelController extends Controller
      */
     public function show(Bengkel $bengkel)
     {
-        //
+        $product = product::findorFail($bengkel);
+
+        return response()->json($product);
     }
 
     /**

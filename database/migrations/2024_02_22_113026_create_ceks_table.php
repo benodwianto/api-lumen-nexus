@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('ceks', function (Blueprint $table) {
             $table->id();
-            $table->integer('km_terakhir');
+            $table->integer('km_sebelum');
             $table->integer('km_sekarang');
+            $table->foreignId('bengkel')->nullable();
+            $table->foreignId('user_id');
+            $table->string('harga');
+            $table->string('treatment');
             $table->enum('jenis_motor', ['Manual', 'Matic', 'Kopling']);
             $table->timestamps();
         });

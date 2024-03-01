@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Coment;
+use App\Models\Bengkel;
 use App\Models\product;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -15,8 +17,63 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data = Product::all();
-        return response()->json($data);
+        $data_produk = Product::all();
+        $data_bengkel = Bengkel::all();
+        $data_komentar = Coment::all();
+        return response()->json([
+            'data_produk' => $data_produk,
+            'data_bengkel' => $data_bengkel,
+            'data_komentar' => $data_komentar
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        // Mendapatkan parameter pencarian
+        $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDirection = $request->input('sort_direction', 'desc');
+
+        // Query untuk pencarian produk
+        $productsQuery = Product::query();
+        if ($search) {
+            $productsQuery->where(function ($query) use ($search) {
+                $query->where('nama_produk', 'like', "%$search%")
+                    ->orWhere('deskripsi', 'like', "%$search%");
+            });
+        }
+        $productsQuery->orderBy($sortBy, $sortDirection);
+        if ($sortBy == 'harga') {
+            $productsQuery->orderBy('harga', $sortDirection);
+        }
+
+        // Query untuk pencarian bengkel
+        $bengkelsQuery = Bengkel::query();
+        if ($search) {
+            $bengkelsQuery->where('nama_bengkel', 'like', "%$search%");
+        }
+        $bengkelsQuery->orderBy($sortBy, $sortDirection);
+
+        // Mengambil hasil pencarian dengan paginasi
+        $products = $productsQuery->paginate(10);
+        $bengkels = $bengkelsQuery->paginate(10);
+
+        // Memeriksa apakah hasil pencarian kosong
+        $productCount = $products->count();
+        $bengkelCount = $bengkels->count();
+
+        // Membuat pesan jika hasil pencarian kosong
+        $message = '';
+        if ($productCount === 0 && $bengkelCount === 0) {
+            $message = 'Kami tidak dapat menemukan data yang sesuai dengan pencarian Anda.';
+        }
+
+        // Mengembalikan hasil pencarian beserta pesan
+        return response()->json([
+            'products' => $products,
+            'bengkels' => $bengkels,
+            'message' => $message
+        ]);
     }
 
     /**

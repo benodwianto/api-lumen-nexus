@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('bengkels', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nama_bengkel');
-            $table->foreignId('id_user');
+            $table->foreignId('user_id');
             $table->string('foto-bengkel')->nullable();
             $table->integer('jam_buka')->nullable();
             $table->integer('jam_tutup')->nullable();
             $table->integer('nohp');
             $table->string('alamat');
             $table->text('deskripsi')->nullable();
+            $table->float('rating')->default(0);
+            $table->integer('review_count')->default(0);
             $table->string('foto-galeri-1')->nullable();
             $table->string('foto-galeri-2')->nullable();
             $table->string('foto-galeri-3')->nullable();

@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
         Bengkel::create([
             'nama_bengkel' => 'Bambang Bengkel',
-            'id_user' => 1,
+            'user_id' => 1,
             'jam_buka' => '09.00',
             'jam_tutup' => '18.00',
             'nohp' => '081234567',

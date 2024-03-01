@@ -14,7 +14,9 @@ class ComentController extends Controller
      */
     public function index()
     {
-        //
+        $data_komentar = Coment::all();
+
+        return response()->json($data_komentar);
     }
 
     /**
@@ -33,7 +35,7 @@ class ComentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $productId)
+    public function store(Request $request, $id)
     {
         // Validasi input
         $this->validate($request, [
@@ -42,7 +44,7 @@ class ComentController extends Controller
 
         $data = [
             'user_id' => auth()->user()->id,
-            'product_id' => $productId,
+            'bengkel_id' => $id,
             'komentar' => $request->input('komentar')
         ];
 
@@ -55,7 +57,10 @@ class ComentController extends Controller
         }
 
         // Response berhasil
-        return response()->json(['message' => 'Komentar berhasil ditambahkan', 'komen' => $hasil_komen], 201);
+        return response()->json([
+            'message' => 'Komentar berhasil ditambahkan',
+            'komen' => $hasil_komen
+        ], 201);
     }
 
     /**
@@ -94,7 +99,7 @@ class ComentController extends Controller
         if ($update_data) {
             $hasil = [
                 'status' => '200',
-                'pesan' => 'Komen berhasi di perbarui',
+                'pesan' => 'Komen berhasil di perbarui',
             ];
         } else {
             $hasil = [

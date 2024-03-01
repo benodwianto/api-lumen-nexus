@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('kategori_id');
             $table->foreignId('user_id');
-            $table->float('rating')->default(0);
-            $table->integer('review_count')->default(0);
             $table->string('nama_produk');
             $table->integer('harga');
             $table->string('tautan');

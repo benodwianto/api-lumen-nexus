@@ -17,9 +17,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        $data = product::where('user_id', $user->id)->get();
-        return response()->json($data);
+        $data_produk = Product::all();
+        return response()->json($data_produk);
     }
 
     /**
@@ -80,24 +79,6 @@ class ProductController extends Controller
         }
 
         return response()->json($hasil);
-    }
-
-    public function rateProduct(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'rating' => 'required|numeric|min:1|max:5',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $product = Product::findOrFail($id);
-        $product->rating = ($product->rating * $product->review_count + $request->rating) / ($product->review_count + 1);
-        $product->review_count++;
-        $product->save();
-
-        return response()->json(['message' => 'Rating berhasil ditambahkan']);
     }
 
     /**

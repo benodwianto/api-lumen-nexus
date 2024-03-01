@@ -20,6 +20,6 @@ class product extends Model
 
     public function coment()
     {
-        $this->hasMany(Coment::class);
+        return $this->hasMany(Coment::class);
     }
 }

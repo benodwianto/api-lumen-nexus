@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cek;
+use App\Models\Bengkel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class CekController extends Controller
@@ -15,7 +17,10 @@ class CekController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        $semua_riwayat_cek = Cek::where('user_id', $user->id)->get();
+
+        return response()->json($semua_riwayat_cek);
     }
 
     /**
@@ -37,8 +42,8 @@ class CekController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'km_terakhir' => 'required|numeric',
-            'km_sekarang' => 'required|numeric|different:km_terakhir',
+            'km_sebelum' => 'required|numeric',
+            'km_sekarang' => 'required|numeric|different:km_sebelum',
             'jenis_motor' => 'required|in:Matic,Manual,Kopling',
         ]);
 
@@ -50,18 +55,18 @@ class CekController extends Controller
             ], 422);
         }
 
-        $km_terakhir = $request->input('km_terakhir');
+        $km_sebelum = $request->input('km_sebelum');
         $km_sekarang = $request->input('km_sekarang');
         $jenis_motor = $request->input('jenis_motor');
 
         $data = [
-            'km_terakhir' => $km_terakhir,
+            'km_sebelum' => $km_sebelum,
             'km_sekarang' => $km_sekarang,
-            'jenis_motor' => $jenis_motor
+            'jenis_motor' => $jenis_motor,
         ];
 
         if ($jenis_motor == 'Matic') {
-            $perbedaan_km = $km_sekarang - $km_terakhir;
+            $perbedaan_km = $km_sekarang - $km_sebelum;
             if ($perbedaan_km < 2000) {
                 $rekomendasi = 'Tidak perlu perbaikan';
                 $keterangan = 'Motor masih dalam kondisi baik.';
@@ -90,7 +95,7 @@ class CekController extends Controller
                 $keterangan = 'Jika kamu tidak melakukan servis motor berkala, maka kemungkinan akan banyak yang diperiksa, pastikan budget yang kamu bawa berlebih.';
             }
         } elseif ($jenis_motor == 'Manual' or 'Kopling') {
-            $perbedaan_km = $km_sekarang - $km_terakhir;
+            $perbedaan_km = $km_sekarang - $km_sebelum;
             if ($perbedaan_km < 2000) {
                 $rekomendasi = 'Tidak perlu perbaikan';
                 $keterangan = 'Motor masih dalam kondisi baik.';
@@ -130,18 +135,24 @@ class CekController extends Controller
             }
         }
 
-        // Output hasil rekomendasi
         $data = [
-            'km_terakhir' => $km_terakhir,
+            'km_sebelum' => $km_sebelum,
             'km_sekarang' => $km_sekarang,
             'jenis_motor' => $jenis_motor,
-            'perbedaan_km' => $perbedaan_km,
-            'estimasi_harga' => $harga,
-            'rekomendasi' => $rekomendasi,
-            'keterangan' => $keterangan
+            'harga' => $harga,
+            'bengkel' => $request->input('bengkel'),
+            'treatment' => $rekomendasi,
+            'user_id' => Auth::id(),
         ];
 
-        return response()->json($data);
+        Cek::create($data);
+
+        return response()->json([
+            'data' => $data,
+            'rekomendasi' => $rekomendasi,
+            'keterangan' => $keterangan,
+            'perbedaan_km' => $perbedaan_km,
+        ]);
     }
 
 
@@ -154,7 +165,9 @@ class CekController extends Controller
      */
     public function show($id)
     {
-        //
+        $cek = Cek::findOrFail($id);
+
+        return response()->json($cek);
     }
 
     /**
@@ -177,7 +190,20 @@ class CekController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $update_data = Cek::where('id', $id)->update($request->all());
+
+        if ($update_data) {
+            $hasil = [
+                'status' => '200',
+                'pesan' => 'Riwayat chat berhasil di perbarui',
+            ];
+        } else {
+            $hasil = [
+                'pesan' => 'Riwayat chat Gagal di perbarui', 400
+            ];
+        }
+
+        return response()->json($hasil);
     }
 
     /**
@@ -188,6 +214,20 @@ class CekController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $hapus_cek = Cek::destroy($id);
+
+        if ($hapus_cek) {
+            $hasil = [
+                'status' => '200',
+                'pesan' => 'Riwayat cek berhasil dihapus',
+            ];
+        } else {
+            $hasil = [
+                'status' => '400',
+                'pesan' => 'Riwayat cek gagal dihapus',
+            ];
+        }
+
+        return response()->json($hasil);
     }
 }

@@ -14,10 +14,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     use Authenticatable, Authorizable, HasFactory;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes excluded from the model's JSON form.
      *
      * @var string[]
      */
+    protected $hidden = [
+        'password',
+    ];
+
     protected $guarded = ['id'];
 
     public function alamat()
@@ -32,14 +36,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function comment()
     {
-        $this->hasMany(Coment::class);
+        return $this->hasMany(Coment::class);
     }
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var string[]
-     */
-    protected $hidden = [
-        'password',
-    ];
+
+    public function bengkel()
+    {
+        return $this->hasOne(Bengkel::class);
+    }
 }
