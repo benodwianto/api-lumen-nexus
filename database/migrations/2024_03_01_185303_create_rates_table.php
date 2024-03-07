@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('alamats', function (Blueprint $table) {
-            $table->id('id');
-            $table->foreignId('id_user');
-            $table->string('provinsi');
-            $table->string('kota');
-            $table->string('kode_pos')->nullable();
-            $table->text('alamat');
+        Schema::create('rates', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id');
+            $table->foreignId('bengkel_id');
+            $table->text('rating');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('alamats');
+        Schema::dropIfExists('rates');
     }
 };

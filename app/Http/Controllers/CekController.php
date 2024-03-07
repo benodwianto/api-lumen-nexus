@@ -195,11 +195,11 @@ class CekController extends Controller
         if ($update_data) {
             $hasil = [
                 'status' => '200',
-                'pesan' => 'Riwayat chat berhasil di perbarui',
+                'pesan' => 'Riwayat cek berhasil di perbarui',
             ];
         } else {
             $hasil = [
-                'pesan' => 'Riwayat chat Gagal di perbarui', 400
+                'pesan' => 'Riwayat cek Gagal di perbarui', 400
             ];
         }
 

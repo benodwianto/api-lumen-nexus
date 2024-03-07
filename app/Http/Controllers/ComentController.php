@@ -69,9 +69,11 @@ class ComentController extends Controller
      * @param  \App\Models\Coment  $coment
      * @return \Illuminate\Http\Response
      */
-    public function show(Coment $coment)
+    public function show(Coment $coment, $id)
     {
-        //
+        $komentar = Coment::findOrFail($id);
+
+        return response()->json($komentar);
     }
 
     /**
@@ -99,11 +101,11 @@ class ComentController extends Controller
         if ($update_data) {
             $hasil = [
                 'status' => '200',
-                'pesan' => 'Komen berhasil di perbarui',
+                'pesan' => 'Komentar berhasil di perbarui',
             ];
         } else {
             $hasil = [
-                'pesan' => 'Komen Gagal di perbarui', 400
+                'pesan' => 'Komentar Gagal di perbarui', 400
             ];
         }
 

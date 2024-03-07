@@ -30,7 +30,8 @@ class DatabaseSeeder extends Seeder
             'jam_tutup' => '18.00',
             'nohp' => '081234567',
             'alamat' => 'gurun laweh lubeg',
-            'foto-bengkel' => 'bengkel.jpg',
+            'link_gmaps' => 'http://gurun laweh lubeg',
+            'foto_bengkel' => 'bengkel.jpg',
             'deskripsi' => 'bengkel mantap dan sangat mudah dan murah banged dan sangat menyenangkan unutk di lakukan saat anda adalah manusia',
         ]);
 
@@ -39,7 +40,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'bam@gmail.com',
             'password' => Hash::make('password'),
             'api_token' => '12345',
-            'status' => '0',
+            'status' => 'Admin',
         ]);
 
         Category::create([

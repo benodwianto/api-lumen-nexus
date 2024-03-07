@@ -15,12 +15,13 @@ return new class extends Migration
             $table->increments('id');
             $table->string('email');
             $table->string('password');
-            $table->boolean('status')->default(false);
+            $table->enum('status', ['Admin', 'User'])->default('User');
             $table->string('username');
             $table->string('nama_lengkap')->nullable();
-            $table->date('tgl_lahir')->nullable();
+            $table->string('tgl_lahir')->nullable();
             $table->string('foto_profil')->nullable();
-            $table->integer('no_hp')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('no_hp')->nullable();
             $table->string('api_token')->nullable();
             $table->timestamps();
         });

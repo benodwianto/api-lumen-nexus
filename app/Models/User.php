@@ -26,7 +26,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function alamat()
     {
-        return $this->hasMany(Alamat::class);
+        return $this->belongsTo(Alamat::class);
     }
 
     public function product()

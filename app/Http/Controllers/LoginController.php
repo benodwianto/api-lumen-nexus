@@ -34,12 +34,12 @@ class LoginController extends Controller
 
         if (!Hash::check($password, $user->password)) {
             return response()->json([
-                'message' => 'Password salah',
+                'message' => 'Email atau Password salah',
                 'data' => null
             ], 401);
         }
 
-        $token = Str::random(60);
+        $token = $request->bearerToken();
 
         $user->update([
             'api_token' => $token,
@@ -107,8 +107,8 @@ class LoginController extends Controller
             'username' => $request->input('username'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
-            'status' => '0',
-            'api-token' => '1234',
+            'status' => 'User',
+            'api_token' => '1234',
         ];
 
         // Enkripsi password menggunakan Hash::make()

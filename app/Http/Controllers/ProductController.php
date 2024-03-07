@@ -112,24 +112,49 @@ class ProductController extends Controller
      * @param  \App\Models\product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, product $product, $id)
+    public function update(Request $request, $id)
     {
-        $update_data = Product::where('id', $id)->update($request->all());
+        $this->validate($request, [
+            'nama_produk' => 'unique:products,nama_produk,' . $id,
+            'harga' => 'numeric',
+            'tautan' => '',
+            'img' => 'mimes:jpeg,png,jpg|max:1064',
+            'kategori_id' => 'numeric',
+            'deskripsi' => 'min:30',
+        ]);
+
+        $product = Product::findOrFail($id);
+
+        $product->nama_produk = $request->input('nama_produk', $product->nama_produk);
+        $product->harga = $request->input('harga', $product->harga);
+        $product->tautan = $request->input('tautan', $product->tautan);
+        $product->kategori_id = $request->input('kategori_id', $product->kategori_id);
+        $product->deskripsi = $request->input('deskripsi', $product->deskripsi);
+
+        // Upload foto jika ada
+        if ($request->hasFile('img')) {
+            $img = $request->file('img')->getClientOriginalName('img');
+            $request->file('img')->move('img', $img);
+            $product->img = url('img', $img);
+        }
+
+        $update_data = $product->save();
 
         if ($update_data) {
             $hasil = [
                 'status' => '200',
-                'pesan' => 'Data berhasi di perbarui',
+                'pesan' => 'Data berhasil diperbarui',
             ];
         } else {
             $hasil = [
                 'status' => '400',
-                'pesan' => 'Data Gagal di perbarui',
+                'pesan' => 'Data gagal diperbarui',
             ];
         }
 
         return response()->json($hasil);
     }
+
 
     /**
      * Remove the specified resource from storage.

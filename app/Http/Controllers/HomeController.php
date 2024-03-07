@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Coment;
 use App\Models\Bengkel;
+use App\Models\Category;
 use App\Models\product;
 use Illuminate\Http\Request;
 
@@ -20,10 +21,12 @@ class HomeController extends Controller
         $data_produk = Product::all();
         $data_bengkel = Bengkel::all();
         $data_komentar = Coment::all();
+        $data_kategori = Category::all();
         return response()->json([
             'data_produk' => $data_produk,
             'data_bengkel' => $data_bengkel,
-            'data_komentar' => $data_komentar
+            'data_komentar' => $data_komentar,
+            'data_kategori' => $data_kategori
         ]);
     }
 
@@ -81,10 +84,24 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function sortByHighestRating()
     {
-        //
+        $bengkels = Bengkel::orderByDesc('rating')->get();
+        return response()->json($bengkels);
     }
+
+    public function sortByLowestRating()
+    {
+        $bengkels = Bengkel::orderBy('rating')->get();
+        return response()->json($bengkels);
+    }
+
+    public function sortByLatest()
+    {
+        $bengkels = Bengkel::orderByDesc('created_at')->get();
+        return response()->json($bengkels);
+    }
+
 
     /**
      * Store a newly created resource in storage.
